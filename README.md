@@ -15,3 +15,42 @@ Intermediate Data: During training, model weights and performance metrics are sa
 Generated Data: Final model weights after pruning and accuracy/loss metrics for each pruning iteration are generated.
 
 To reproduce the results of the experiment from loading the data to the pruning and evaluation, copy the entirety of the code within the 'synapticprunealgo (1).py' file into the Jupyter notebook 'matplotlib.ipynb.' Altogether, this will load and preprocess the MNIST dataset, create a dense artificial neural network, train the model and save the initial weights, prune the model iteratively and evaluate performance, and plot/ display the results. 
+
+# Chore Calendar Generator
+
+short script to schedule chores with roommates and export data to an .isc file
+
+# How To Use
+
+### Installation
+
+```
+# Clone the repository
+git clone https://github.com/adit-bala/chores.git
+
+# Enter into the directory
+cd chores/
+
+# Install the dependencies
+pip install ics
+```
+
+### Modifying
+
+To personalize the calendar, adjust the lines that have the `# UPDATE` above them with the appropriate value 
+
+### Exporting
+
+To export your calendar to an .ics file, run `chores.py` in your terminal
+
+```
+python3 chores.py
+```
+
+Import `chores_calendar.ics` into Google Calendar.
+
+
+
+
+
+ 
