@@ -1,7 +1,9 @@
 # GitHub Codespaces ♥️ Jupyter Notebooks
 
 Synaptic pruning is an essential part of brain development in early childhood and adulthood, where redundant or extra synapses are removed, optimizing neural circuitry and cognitive function. Drawing inspiration from this process, this research aims to apply a similar approach to creating sparse networks within dense neural networks. By mimicking synaptic pruning, unnecessary connections can systematically be eliminated, resulting in more efficient and compact artificial neural networks. This paper will explore the benefits of such pruning techniques through the MNIST dataset to decrease computational requirements and significantly reduce the model's footprint. 
- 
+
+# Installation
+
 To replicate this experiment, a Python environment must be set up with the necessary packages. These can be installed using the following command: pip install tensorflow ipywidgets matplotlib seaborn statsmodels tabulate. This experiment utilizes the MNIST dataset, which is publically available through  TensorFlow's Keras API. The dataset will be automatically downloaded and preprocessed when running the code. In terms of how the data is handled:
 
 Raw Data: The MNIST dataset is downloaded from the Keras dataset repository.
