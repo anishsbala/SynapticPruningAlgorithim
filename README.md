@@ -5,7 +5,7 @@ Synaptic pruning is an essential part of brain development in early childhood an
 ### Installation
 
 # Clone the repository
-git clone https://github.com/adit-bala/chores.git
+git clone https://github.com/anishsbala/SynapticPruningAlgorithim.git
 
 To replicate this experiment, a Python environment must be set up with the necessary packages. These can be installed using the following command: pip install tensorflow ipywidgets matplotlib seaborn statsmodels tabulate. This experiment utilizes the MNIST dataset, which is publically available through  TensorFlow's Keras API. The dataset will be automatically downloaded and preprocessed when running the code. In terms of how the data is handled:
 
