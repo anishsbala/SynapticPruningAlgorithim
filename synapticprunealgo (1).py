@@ -20,14 +20,14 @@ x_test = x_test.reshape(-1, 28*28)
 
 def create_dense_model():
     model = Sequential([
-        Dense(128, activation='relu', input_shape=(784,)),
-        Dense(64, activation='relu'),
-        Dense(10, activation='softmax')
+        Dense(128, activation="relu", input_shape=(784,)),
+        Dense(64, activation="relu"),
+        Dense(10, activation="softmax")
     ])
     return model
 
 dense_model = create_dense_model()
-dense_model.compile(optimizer=Adam(), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+dense_model.compile(optimizer=Adam(), loss="sparse_categorical_crossentropy", metrics=["accuracy"])
 history = dense_model.fit(x_train, y_train, epochs=4, validation_data=(x_test, y_test))
 
 initial_weights = dense_model.get_weights()
@@ -42,33 +42,33 @@ def smooth_line(x, y, frac=0.1):
     smoothed = lowess(y, x, frac=frac)
     return smoothed[:, 0], smoothed[:, 1]
 
-epochs = np.arange(len(history.history['accuracy']))
+epochs = np.arange(len(history.history["accuracy"]))
 
 plt.figure(figsize=(14, 6))
 
 plt.subplot(1, 2, 1)
-x_smooth, y_smooth = smooth_line(epochs, np.array(history.history['accuracy']))
-plt.plot(x_smooth, y_smooth, label='Train Accuracy', color='blue')
-x_smooth, y_smooth = smooth_line(epochs, np.array(history.history['val_accuracy']))
-plt.plot(x_smooth, y_smooth, label='Test Accuracy', color='orange')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
+x_smooth, y_smooth = smooth_line(epochs, np.array(history.history["accuracy"]))
+plt.plot(x_smooth, y_smooth, label="Train Accuracy", color="blue")
+x_smooth, y_smooth = smooth_line(epochs, np.array(history.history["val_accuracy"]))
+plt.plot(x_smooth, y_smooth, label="Test Accuracy", color="orange")
+plt.xlabel("Epochs")
+plt.ylabel("Accuracy")
 plt.legend()
-plt.grid(True, which='both', linestyle='--', linewidth=0.5)
-plt.title('Accuracy over Epochs')
+plt.grid(True, which="both", linestyle="--", linewidth=0.5)
+plt.title("Accuracy over Epochs")
 
 plt.subplot(1, 2, 2)
-x_smooth, y_smooth = smooth_line(epochs, np.array(history.history['loss']))
-plt.plot(x_smooth, y_smooth, label='Train Loss', color='blue')
-x_smooth, y_smooth = smooth_line(epochs, np.array(history.history['val_loss']))
-plt.plot(x_smooth, y_smooth, label='Test Loss', color='orange')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
+x_smooth, y_smooth = smooth_line(epochs, np.array(history.history["loss"]))
+plt.plot(x_smooth, y_smooth, label="Train Loss", color="blue")
+x_smooth, y_smooth = smooth_line(epochs, np.array(history.history["val_loss"]))
+plt.plot(x_smooth, y_smooth, label="Test Loss", color="orange")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
 plt.legend()
-plt.grid(True, which='both', linestyle='--', linewidth=0.5)
-plt.title('Loss over Epochs')
+plt.grid(True, which="both", linestyle="--", linewidth=0.5)
+plt.title("Loss over Epochs")
 
-plt.suptitle('Initial Model Training')
+plt.suptitle("Initial Model Training")
 plt.tight_layout(rect=[0, 0, 1, 0.95])
 plt.show()
 
@@ -91,7 +91,7 @@ def prune_weights(model, pruning_fraction):
     return model, total_weights, total_pruned
 
 def create_winning_tickets(model, x_train, y_train, x_test, y_test, initial_weights, iterations=5, pruning_fractions=[0.2]):
-    results = {pf: {'accuracies': [], 'losses': [], 'weights_retained': []} for pf in pruning_fractions}
+    results = {pf: {"accuracies": [], "losses": [], "weights_retained": []} for pf in pruning_fractions}
     
     final_pruned_models = {}
     for pruning_fraction in pruning_fractions:
@@ -101,12 +101,12 @@ def create_winning_tickets(model, x_train, y_train, x_test, y_test, initial_weig
         for i in range(iterations):
             pruned_model, total_weights, total_pruned = prune_weights(pruned_model, pruning_fraction)
             pruned_model.set_weights(initial_weights)
-            pruned_model.compile(optimizer=Adam(), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+            pruned_model.compile(optimizer=Adam(), loss="sparse_categorical_crossentropy", metrics=["accuracy"])
             pruned_model.fit(x_train, y_train, epochs=1, verbose=0)
             loss, accuracy = pruned_model.evaluate(x_test, y_test, verbose=0)
-            results[pruning_fraction]['accuracies'].append(accuracy)
-            results[pruning_fraction]['losses'].append(loss)
-            results[pruning_fraction]['weights_retained'].append((total_weights - total_pruned) / total_weights)
+            results[pruning_fraction]["accuracies"].append(accuracy)
+            results[pruning_fraction]["losses"].append(loss)
+            results[pruning_fraction]["weights_retained"].append((total_weights - total_pruned) / total_weights)
             print(f"Pruning Fraction {pruning_fraction}, Iteration {i + 1}, Accuracy: {accuracy}, Loss: {loss}")
         
         final_pruned_models[pruning_fraction] = pruned_model
@@ -125,44 +125,44 @@ def unique_sorted(x, y):
 fig, axes = plt.subplots(3, 1, figsize=(14, 18), sharex=True)
 
 for pf in pruning_fractions:
-    accuracies = results[pf]['accuracies']
+    accuracies = results[pf]["accuracies"]
     x_smooth, y_smooth = smooth_line(np.arange(1, pruning_iterations + 1), np.array(accuracies))
-    axes[0].plot(x_smooth, y_smooth, label=f'Pruning Fraction {pf}')
+    axes[0].plot(x_smooth, y_smooth, label=f"Pruning Fraction {pf}")
     axes[0].fill_between(range(1, pruning_iterations + 1), 
                          np.array(accuracies) - np.std(accuracies), 
                          np.array(accuracies) + np.std(accuracies), alpha=0.2)
 
 for pf in pruning_fractions:
-    losses = results[pf]['losses']
+    losses = results[pf]["losses"]
     x_smooth, y_smooth = smooth_line(np.arange(1, pruning_iterations + 1), np.array(losses))
-    axes[1].plot(x_smooth, y_smooth, label=f'Pruning Fraction {pf}')
+    axes[1].plot(x_smooth, y_smooth, label=f"Pruning Fraction {pf}")
     axes[1].fill_between(range(1, pruning_iterations + 1), 
                          np.array(losses) - np.std(losses), 
                          np.array(losses) + np.std(losses), alpha=0.2)
 
 for pf in pruning_fractions:
-    accuracies = results[pf]['accuracies']
-    weights_retained = results[pf]['weights_retained']
+    accuracies = results[pf]["accuracies"]
+    weights_retained = results[pf]["weights_retained"]
     unique_wr, unique_acc = unique_sorted(np.array(weights_retained), np.array(accuracies))
     x_smooth, y_smooth = smooth_line(unique_wr, unique_acc)
-    axes[2].plot(x_smooth, y_smooth, label=f'Pruning Fraction {pf}')
+    axes[2].plot(x_smooth, y_smooth, label=f"Pruning Fraction {pf}")
     axes[2].scatter(weights_retained, accuracies)
 
-axes[0].set_ylabel('Accuracy')
-axes[0].legend(loc='best')
-axes[0].set_title('Model Accuracy vs Pruning Iterations')
-axes[0].grid(True, which='both', linestyle='--', linewidth=0.5)
+axes[0].set_ylabel("Accuracy")
+axes[0].legend(loc="best")
+axes[0].set_title("Model Accuracy vs Pruning Iterations")
+axes[0].grid(True, which="both", linestyle="--", linewidth=0.5)
 
-axes[1].set_ylabel('Loss')
-axes[1].legend(loc='best')
-axes[1].set_title('Model Loss vs Pruning Iterations')
-axes[1].grid(True, which='both', linestyle='--', linewidth=0.5)
+axes[1].set_ylabel("Loss")
+axes[1].legend(loc="best")
+axes[1].set_title("Model Loss vs Pruning Iterations")
+axes[1].grid(True, which="both", linestyle="--", linewidth=0.5)
 
-axes[2].set_xlabel('Weights Retained')
-axes[2].set_ylabel('Accuracy')
-axes[2].legend(loc='best')
-axes[2].set_title('Model Accuracy vs Weights Retained')
-axes[2].grid(True, which='both', linestyle='--', linewidth=0.5)
+axes[2].set_xlabel("Weights Retained")
+axes[2].set_ylabel("Accuracy")
+axes[2].legend(loc="best")
+axes[2].set_title("Model Accuracy vs Weights Retained")
+axes[2].grid(True, which="both", linestyle="--", linewidth=0.5)
 
 plt.tight_layout()
 plt.show()
@@ -170,7 +170,7 @@ plt.show()
 table_data = []
 for pf in pruning_fractions:
     for i in range(pruning_iterations):
-        table_data.append([pf, i+1, results[pf]['accuracies'][i], results[pf]['losses'][i], results[pf]['weights_retained'][i]])
+        table_data.append([pf, i+1, results[pf]["accuracies"][i], results[pf]["losses"][i], results[pf]["weights_retained"][i]])
 
-headers = ['Pruning Fraction', 'Iteration', 'Accuracy', 'Loss', 'Weights Retained']
-print(tabulate(table_data, headers=headers, tablefmt='grid'))
+headers = ["Pruning Fraction", "Iteration", "Accuracy", "Loss", "Weights Retained"]
+print(tabulate(table_data, headers=headers, tablefmt="grid"))
